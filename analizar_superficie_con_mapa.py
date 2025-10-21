@@ -324,9 +324,19 @@ def main(gpx_path: str):
     fmap.get_root().html.add_child(folium.Element(legend_html))
 
     # Guardar mapa
-    out_html = Path.cwd() / f"mapa_ruta_{gpx_path.stem}.html"
+    """ out_html = Path.cwd() / f"mapa_ruta_{gpx_path.stem}.html"
     fmap.save(str(out_html))
-    print(f"Mapa guardado en: {out_html}")
+    print(f"Mapa guardado en: {out_html}") """
+        # 10) Generar el mapa HTML en memoria (sin guardar en disco)
+    from io import BytesIO
+
+    html_buffer = BytesIO()
+    fmap.save(html_buffer, close_file=False)
+    html_content = html_buffer.getvalue().decode("utf-8")
+
+    print("Mapa generado correctamente (en memoria).")
+    return html_content
+
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
