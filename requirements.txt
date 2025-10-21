@@ -1,0 +1,9 @@
+streamlit
+folium
+osmnx
+geopandas
+gpxpy
+geopy
+shapely
+networkx
+pyproj
