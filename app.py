@@ -41,11 +41,23 @@ if uploaded_file is not None:
         st.text(output)
 
     # Buscar el HTML generado (mismo directorio que el GPX temporal)
-    map_path = tmp_path.parent / f"mapa_ruta_v9_{tmp_path.stem}.html"
+    # Buscar el HTML generado (en la carpeta del proyecto)
+    map_filename = f"mapa_ruta_v9_{tmp_path.stem}.html"
+
+    # 1️⃣ Buscar junto al GPX temporal
+    map_path = tmp_path.parent / map_filename
+
+    # 2️⃣ Si no existe, buscar en el directorio del proyecto (donde Streamlit guarda los scripts)
+    if not map_path.exists():
+        project_dir = Path(__file__).parent
+        alt_path = project_dir / map_filename
+        if alt_path.exists():
+            map_path = alt_path
 
     if map_path.exists():
         with open(map_path, "r", encoding="utf-8") as f:
             html = f.read()
+
 
         st.success("✅ Análisis completado. Aquí tienes el mapa:")
         st.components.v1.html(html, height=750, scrolling=True)
