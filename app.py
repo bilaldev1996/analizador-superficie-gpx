@@ -36,6 +36,10 @@ if st.session_state.map_html is None:
             tmp.write(uploaded_file.read())
             tmp_path = Path(tmp.name)
 
+        # Guardar el nombre del archivo original (sin extensión)
+        filename = Path(uploaded_file.name).stem
+        st.session_state.filename = filename
+
         st.info("Procesando el archivo... esto puede tardar unos segundos ⏳")
 
         # Capturar la salida y el HTML generado
@@ -51,6 +55,16 @@ if st.session_state.map_html is None:
         st.rerun()  # recargar la página para mostrar el mapa
 else:
     st.title("🗺️ Resultado del análisis")
+    
+    # Botón de descarga del mapa
+    st.download_button(
+        label="💾 Descargar mapa",
+        data=st.session_state.map_html,
+        file_name=f"mapa_ruta_{st.session_state.get('filename', 'ruta')}.html",
+        mime="text/html",
+        help="Descarga el mapa interactivo en formato HTML para verlo en tu navegador"
+    )
+    
     st.components.v1.html(st.session_state.map_html, height=750, scrolling=True)
 
     with st.expander("📜 Ver registro del análisis"):
@@ -59,4 +73,5 @@ else:
     if st.button("🔁 Analizar otro archivo"):
         st.session_state.map_html = None
         st.session_state.log_output = None
+        st.session_state.filename = None
         st.rerun()
